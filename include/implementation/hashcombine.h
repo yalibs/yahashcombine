@@ -27,15 +27,20 @@ namespace ya {
 #ifndef COMBINE_MAGIC_NUM
 #define COMBINE_MAGIC_NUM 0x9e3779b9
 #endif
+    template<typename T>
+    inline auto hash_combine(const std::size_t& seed, const T& v) {
+        return seed ^ std::hash<T>{}(v) + COMBINE_MAGIC_NUM + (seed<<6) + (seed>>2);
+    }
+
     template <typename T>
-    inline void hash_combine(std::size_t& seed, const T& v) {
-        seed ^= std::hash<T>{}(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+    inline void hash_combine_helper(std::size_t& seed, const T& v) {
+        seed = hash_combine<T>(seed,v);
     }
 
     template<typename... Ts>
     size_t hash_combine(const Ts&... args) {
         size_t seed = 0;
-        (hash_combine(seed,args) , ... );
+        (hash_combine_helper(seed,args) , ... );
         return seed;
     }
 }

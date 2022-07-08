@@ -24,5 +24,18 @@ SOFTWARE.
 #include <hashcombine>
 
 int main(int argc, char** argv) {
+    std::string str1 = "foo";
+    std::string str2 = "bar";
+
+    // You can combine hashes incrementally like so
+    auto foo_hash = std::hash<std::string>{}(str1);
+    std::cout << R"("foo" hash: )" << foo_hash << std::endl;
+    auto foobar_hash = ya::hash_combine(foo_hash, str2);
+    std::cout << R"("foo" + "bar" hash: )" << foobar_hash << std::endl;
+
+    // You can also just combine many at once like so
+    auto combined = ya::hash_combine(str1, str2);
+    std::cout << R"("foo" + "bar" hash: )" << combined << std::endl;
+
     return 0;
 }
